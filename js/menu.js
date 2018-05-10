@@ -8,13 +8,13 @@ let Menu = {
   create: function () {
     menuscreen = kratos_game.add.sprite(0,0, 'menuscreen');
 
-    let startGameButton = kratos_game.add.sprite(150,100, 'button');
+    let startGameButton = kratos_game.add.button(150,100, 'button', function(){kratos_game.state.start('GameState')});
     startGameButton.anchor.set(0.5);
 
-    let highScoreButton = kratos_game.add.sprite(150,180, 'button');
+    let highScoreButton = kratos_game.add.button(150,180, 'button');
     highScoreButton.anchor.set(0.5);
 
-    let controlsButton = kratos_game.add.sprite(150,260, 'button');
+    let controlsButton = kratos_game.add.button(150,260, 'button', function(){kratos_game.state.start('Controls')});
     controlsButton.anchor.set(0.5);
 
     start_text = "New Game";
@@ -44,10 +44,4 @@ let Menu = {
     controlsButton.height = 150;
     controlsButton.width = 250;
   },
-
-  update: function() {
-    if(kratos_game.input.activePointer.justPressed()) {
-    kratos_game.state.start('GameState');
-  }
-  }
 }
