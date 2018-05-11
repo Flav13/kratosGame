@@ -11,6 +11,7 @@ let GameState = {
 
     this.facing_right = true;
     this.is_jumping = false;
+    this.once = false;
 
 
   },
@@ -90,6 +91,10 @@ let GameState = {
     this.health_text.fixedToCamera = true;
 
 
+    this.score_display = kratos_game.add.text(20,20, this.score, { font: "16px Arial", fill: "#000", align: "center" });
+    this.score_display.fixedToCamera = true;
+
+
     this.is_jumping = false;
     kratos_game.camera.follow(this.player);
 
@@ -100,6 +105,7 @@ let GameState = {
     kratos_game.physics.arcade.collide(this.player, this.layer);
 
     this.health_text.setText(this.player.health);
+    this.score_display.setText(this.score);
 
     this.player.body.velocity.x = 0;
 
@@ -117,8 +123,6 @@ let GameState = {
             this.player.health -=2;
             this.hpBar.setPercent(this.player.health);
         }
-
-         console.log(this.player.health);
        }
        else{
         this.enemies[i].animations.play('stand-left');
@@ -203,6 +207,9 @@ else if (kratos_game.input.keyboard.isDown(Phaser.Keyboard.X)) {
     for (let i=0; i<this.enemies.length; i++){
       if (this.enemies[i].x >= this.player.x && this.enemies[i].x - this.player.x <=90) {
         this.enemies[i].damage(5);
+        if(!this.enemies[i].alive) {
+          this.score += 300;
+        }
     }
   }
   this.player.animations.play('attack');
@@ -210,6 +217,9 @@ else if (kratos_game.input.keyboard.isDown(Phaser.Keyboard.X)) {
     for (let i=0; i<this.enemies.length; i++){
       if (this.player.x >= this.enemies[i].x && this.player.x - this.enemies[i].x<=90) {
         this.enemies[i].damage(5);
+        if(!this.enemies[i].alive) {
+          this.score += 300;
+        }
     }
   }
   this.player.animations.play('attack-left');
@@ -238,18 +248,31 @@ else if (this.player.body.onFloor()){
  }
 
  if(this.player.x >= 1900){
-   showMessageBox('Level Completed!');
+   if(!this.once){
+   if(this.player.health == 100){
+     this.score += 500;
+   }
+   this.score += this.player.health * 10;
+   showMessageBox('Level Completed!', this.score);
+   master_scores.push(this.score);
+   this.once =true;
+   }
   }
  }
 };
 
-function showMessageBox(text, w = 300, h = 200) {
+function showMessageBox(text,score, w = 300, h = 200) {
         let popup = kratos_game.add.image(1700, 500, 'popup');
         let back = kratos_game.add.button(1800, 620, "button", function(){kratos_game.state.start('Menu')});
         let text1 = kratos_game.add.text(1740,550, text);
         let text2 = kratos_game.add.text(1830,660, 'Back', { font: "18px Arial", fill: "#fff", align: "center" });
+        let text3 = kratos_game.add.text(1740,600, 'Score: '+ score);
+
         text1.wordWrap = true;
         text1.wordWrapWidth = w * .9;
+
+        text3.wordWrap = true;
+        text3.wordWrapWidth = w * .9;
 
         back.width = 100;
         back.height = 100;
