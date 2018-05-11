@@ -15,7 +15,8 @@ let Controls = {
     jump_text = "Jump";
     left_text = "Left";
     right_text = "Right";
-    attack_text = "Attack/Interact";
+    attack_text = "Attack/";
+    interact_text = 'Interact';
     block_text = "Block";
     style = { font: "26px Arial", fill: "#000", align: "center" };
 
@@ -32,8 +33,11 @@ let Controls = {
     let right = kratos_game.add.text(300,130, right_text, style);
     right.anchor.set(0.5);
 
-    let attack = kratos_game.add.text(150,220, attack_text, style);
+    let attack = kratos_game.add.text(160,200, attack_text, style);
     attack.anchor.set(0.5);
+
+    let interact = kratos_game.add.text(160,230, interact_text, style);
+    interact.anchor.set(0.5);
 
     let block = kratos_game.add.text(140,300, block_text, style);
     block.anchor.set(0.5);

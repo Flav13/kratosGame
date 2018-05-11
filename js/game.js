@@ -6,6 +6,8 @@ let GameState = {
     this.load.spritesheet('lever', 'assets/lever.png', 61,61,2);
     this.load.tilemap('map', 'assets/level1.csv');
     this.load.image('tileset', 'assets/tileset.png');
+    this.load.image('button', 'assets/button.png');
+    this.load.image('popup', 'assets/popup.png');
 
     this.facing_right = true;
     this.is_jumping = false;
@@ -18,6 +20,7 @@ let GameState = {
     kratos_game.physics.arcade.gravity.y = 400;
 
     this.enemies = [];
+    this.score = 0;
 
     this.background = kratos_game.add.sprite(0,0, 'background')
     this.background.height = kratos_game.height;
@@ -92,12 +95,11 @@ let GameState = {
 
   },
   update: function(){
-    this.health_text.setText(this.player.health);
-
-    console.log(this.player.x, this.player.y);
     kratos_game.physics.arcade.collide(this.enemy, this.layer);
     kratos_game.physics.arcade.collide(this.enemy_2, this.layer);
     kratos_game.physics.arcade.collide(this.player, this.layer);
+
+    this.health_text.setText(this.player.health);
 
     this.player.body.velocity.x = 0;
 
@@ -193,9 +195,8 @@ else if (kratos_game.input.keyboard.isDown(Phaser.Keyboard.X)) {
     this.map.removeTile(54,18, 0);
     this.map.removeTile(54,17, 0);
     this.map.removeTile(54,16, 0);
-
-
-
+    this.map.removeTile(54,15, 0);
+    this.map.removeTile(54,14, 0);
   }
 
   else if (this.facing_right) {
@@ -235,6 +236,26 @@ else if (this.player.body.onFloor() && !this.is_jumping)
 else if (this.player.body.onFloor()){
   this.is_jumping = false;
  }
-}
 
+ if(this.player.x >= 1900){
+   showMessageBox('Level Completed!');
+  }
+ }
 };
+
+function showMessageBox(text, w = 300, h = 200) {
+        let popup = kratos_game.add.image(1700, 500, 'popup');
+        let back = kratos_game.add.button(1800, 620, "button", function(){kratos_game.state.start('Menu')});
+        let text1 = kratos_game.add.text(1740,550, text);
+        let text2 = kratos_game.add.text(1830,660, 'Back', { font: "18px Arial", fill: "#fff", align: "center" });
+        text1.wordWrap = true;
+        text1.wordWrapWidth = w * .9;
+
+        back.width = 100;
+        back.height = 100;
+        popup.width = w;
+        popup.height = h;
+
+        back.inputEnabled = true;
+
+    }
